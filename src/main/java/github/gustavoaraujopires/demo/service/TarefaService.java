@@ -1,6 +1,6 @@
 package github.gustavoaraujopires.demo.service;
 
-import github.gustavoaraujopires.demo.exception.IdTarefaNaoEncontradoException;
+import github.gustavoaraujopires.demo.exception.IdNaoEncontradoException;
 import github.gustavoaraujopires.demo.model.Tarefa;
 import github.gustavoaraujopires.demo.repository.TarefaRepository;
 import lombok.RequiredArgsConstructor;
@@ -23,13 +23,13 @@ public class TarefaService {
     }
 
     public Tarefa buscarPorId (Long id){
-        return repository.findById(id).orElseThrow(() -> new IdTarefaNaoEncontradoException("id não encontrado"));
+        return repository.findById(id).orElseThrow(() -> new IdNaoEncontradoException("id não encontrado"));
     }
 
     public Tarefa atualizar (Long id, Tarefa  tarefaAtualizada) {
-        var Tarefa = repository.findById(id).orElseThrow(() -> new IdTarefaNaoEncontradoException("Id não encontrado"));
+        var Tarefa = repository.findById(id).orElseThrow(() -> new IdNaoEncontradoException("Id não encontrado"));
         if (Tarefa == null) {
-            throw new IdTarefaNaoEncontradoException("Id não encontrado");
+            throw new IdNaoEncontradoException("Id não encontrado");
         }
             Tarefa.setTitulo(tarefaAtualizada.getTitulo());
             Tarefa.setDescricao(tarefaAtualizada.getDescricao());
@@ -42,7 +42,7 @@ public class TarefaService {
         if (id != null) {
             repository.deleteById(id);
         }
-        throw new IdTarefaNaoEncontradoException("id não encontrado");
+        throw new IdNaoEncontradoException("id não encontrado");
     }
 
 }
