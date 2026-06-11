@@ -1,0 +1,22 @@
+package github.gustavoaraujopires.demo.model;
+
+import jakarta.persistence.*;
+import lombok.Data;
+
+import java.time.LocalDate;
+
+@Entity
+@Data
+public class Tarefa {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+    private String titulo;
+    private String descricao;
+    private LocalDate dataInicio;
+    private LocalDate dataLimite;
+
+    @Enumerated(EnumType.STRING)
+    private StatusTarefa statusTarefa;
+}
