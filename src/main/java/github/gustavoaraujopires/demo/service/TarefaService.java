@@ -1,9 +1,12 @@
 package github.gustavoaraujopires.demo.service;
 
 import github.gustavoaraujopires.demo.exception.IdNaoEncontradoException;
+import github.gustavoaraujopires.demo.exception.StatusInvalidoException;
+import github.gustavoaraujopires.demo.model.StatusTarefa;
 import github.gustavoaraujopires.demo.model.Tarefa;
 import github.gustavoaraujopires.demo.repository.TarefaRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -15,7 +18,17 @@ public class TarefaService {
     private final TarefaRepository repository;
 
     public Tarefa salvarTarefa(Tarefa tarefa){
+        tarefa.setStatusTarefa(StatusTarefa.PENDENTE);
         return repository.save(tarefa);
+    }
+
+    public void concluirTarefa (Long id){
+        var idTarefa = repository.findById(id).orElseThrow(()-> new IdNaoEncontradoException("id não encontrado"));
+        if (idTarefa.getStatusTarefa() == StatusTarefa.CONCLUIDA){
+            throw new StatusInvalidoException("Tarefa já está concluida !!");
+        }
+        idTarefa.setStatusTarefa(StatusTarefa.CONCLUIDA);
+        repository.save(idTarefa);
     }
 
     public List<Tarefa> buscarTodasTarefas(){
@@ -37,12 +50,14 @@ public class TarefaService {
             return repository.save(Tarefa);
     }
 
+    public ResponseEntity<Void> deletar(Long id) {
+        var idDeletar = repository.findById(id);
+       if (idDeletar.isPresent()){
+           repository.deleteById(id);
+           return ResponseEntity.ok().build();
+       }
+        throw new IdNaoEncontradoException("Id não encontrado");
 
-    public void deletar(Long id) {
-        if (id != null) {
-            repository.deleteById(id);
-        }
-        throw new IdNaoEncontradoException("id não encontrado");
     }
 
 }
