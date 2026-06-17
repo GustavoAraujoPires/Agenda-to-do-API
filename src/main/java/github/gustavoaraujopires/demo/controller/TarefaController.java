@@ -30,6 +30,7 @@ public class TarefaController {
     }
 
     @PatchMapping("{id}")
+    @PreAuthorize("hasRole('USUARIO')")
     public void concluir (@PathVariable Long id){
         service.concluirTarefa(id);
     }

@@ -24,11 +24,13 @@ public class SecurityConfiguration {
                 .csrf(AbstractHttpConfigurer::disable)
                 // para configurar a página de login e se der sucesso mandar para a outra página.
                 .httpBasic(Customizer.withDefaults())
+
                 .formLogin(configurer -> {
-                    configurer.loginPage("/login.html").permitAll();
+                    configurer.loginPage("/login").defaultSuccessUrl("/home", true);
                 })
                 .authorizeHttpRequests(authorize -> {
-                    authorize.requestMatchers("/login.html/**").permitAll();
+                    authorize.requestMatchers("/login/**").permitAll();
+                    authorize.requestMatchers("/home/**").permitAll();
                     authorize.requestMatchers(HttpMethod.POST, "/usuarios/**").permitAll();
                     authorize.anyRequest().authenticated();
                 })

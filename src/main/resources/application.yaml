@@ -2,7 +2,7 @@ spring:
   application:
     name: Agenda
   datasource:
-    url: jdbc:postgresql://localhost:5432/agenda-API
+    url: jdbc:postgresql://localhost:5432/agendaDB
     username: postgres
     password: postgres
     driver-class-name: org.postgresql.Driver

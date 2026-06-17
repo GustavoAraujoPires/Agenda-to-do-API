@@ -23,7 +23,6 @@ public class UsuarioService {
     }
 
     public Usuario buscarPorLogin(String login){
-
         return repository.findByLogin(login);
     }
 
