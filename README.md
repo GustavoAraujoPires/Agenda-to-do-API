@@ -16,7 +16,7 @@
 
 ##  Sobre o Projeto
 
-A **Agenda de Tarefas** é uma aplicação back-end desenvolvida com **Spring Boot** que oferece um sistema completo de gerenciamento de tarefas com autenticação de usuários, autorização por roles e uma tela de login personalizada. O projeto aplica boas práticas como uso de DTOs, mapeamento de objetos via MapStruct, validação de dados e tratamento global de exceções.
+**Agenda de Tarefas** é uma aplicação back-end desenvolvida com **Spring Boot** que oferece um sistema completo de gerenciamento de tarefas com autenticação de usuários, autorização por roles e uma tela de login personalizada. O projeto aplica boas práticas como uso de DTOs, mapeamento de objetos via MapStruct, validação de dados e tratamento global de exceções.
 
 ---
 
@@ -225,12 +225,12 @@ O sistema utiliza **Form Login** do Spring Security com página de login persona
 
 ## Autor
 
-Feito por **Gustavo Araujo Pires**
+Feito por **Gustavo Araújo Pires**
 
 [![GitHub](https://img.shields.io/badge/GitHub-gustavoaraujopires-181717?style=flat-square&logo=github)](https://github.com/gustavoaraujopires)
 
 ---
 
 <p align="center">
-  Desenvolvido com ☕ Java e 💚 Spring Boot
+  Desenvolvido com Java e Spring Boot.
 </p>
