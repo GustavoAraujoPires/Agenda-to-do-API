@@ -4,6 +4,7 @@ import github.gustavoaraujopires.demo.exception.IdNaoEncontradoException;
 import github.gustavoaraujopires.demo.model.Usuario;
 import github.gustavoaraujopires.demo.repository.UsuarioRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -30,7 +31,12 @@ public class UsuarioService {
         return repository.findAll();
     }
 
-    public void deletar (Long id){
-        repository.deleteById(id);
+    public ResponseEntity<Void> deletar (Long id){
+        var idUsuario = repository.findById(id);
+        if (idUsuario.isPresent()) {
+            repository.deleteById(id);
+            return ResponseEntity.ok().build();
+        }
+        throw new IdNaoEncontradoException("Id não encontrado");
     }
 }
