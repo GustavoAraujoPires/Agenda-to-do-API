@@ -1,460 +1,357 @@
 <!DOCTYPE html>
 <html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
-
 <head>
-
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <title>Agenda de Tarefas</title>
-
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
-          rel="stylesheet">
-
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"
-          rel="stylesheet">
-
+    <title>Task Dashboard | Autenticação</title>
+    <!-- Bootstrap 5 -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <style>
-
-        *{
-            margin:0;
-            padding:0;
-            box-sizing:border-box;
+        :root {
+            --bg-main: #e9ecef;
+            --card-bg: #ffffff;
+            --accent: #0d6efd;
+            --success: #198754;
+            --warning: #ffc107;
+            --danger: #dc3545;
+            --dark: #212529;
+            --text-muted: #6c757d;
+            --border-radius: 1.2rem;
+            --transition: 0.3s ease;
         }
-
-        body{
-
-            min-height:100vh;
-
-            display:flex;
-            justify-content:center;
-            align-items:center;
-
-            background:#ececec;
-
-            font-family:'Segoe UI',sans-serif;
+        body {
+            background: var(--bg-main);
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0;
+            padding: 1rem;
         }
-
-        .card-auth{
-
-            width:380px;
-
-            background:white;
-
-            border-radius:35px;
-
-            overflow:hidden;
-
-            box-shadow:
-                    0 15px 40px rgba(0,0,0,.12);
-
-            animation:fade .5s ease;
+        /* Card principal */
+        .auth-card {
+            background: var(--card-bg);
+            border-radius: var(--border-radius);
+            box-shadow: 0 1rem 2.5rem rgba(0, 0, 0, 0.12);
+            overflow: hidden;
+            width: 100%;
+            max-width: 920px;
+            display: flex;
+            flex-direction: row;
+            animation: fadeInUp 0.6s ease;
         }
-
-        .header{
-
-            background:#111;
-
-            height:180px;
-
-            color:white;
-
-            display:flex;
-            flex-direction:column;
-            justify-content:center;
-            align-items:center;
-
-            position:relative;
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
         }
-
-        .header::before{
-
-            content:"";
-
-            position:absolute;
-
-            width:100%;
-            height:100%;
-
-            background:
-                    radial-gradient(circle at 30% 30%,#222 10%,transparent 10%),
-                    radial-gradient(circle at 70% 40%,#222 10%,transparent 10%),
-                    radial-gradient(circle at 50% 80%,#222 10%,transparent 10%);
-
-            opacity:.6;
+        /* Painel esquerdo (marca) */
+        .auth-brand {
+            background: linear-gradient(135deg, #1f2937 0%, #111827 100%);
+            color: white;
+            padding: 3rem 2rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            width: 45%;
+            position: relative;
+            overflow: hidden;
         }
-
-        .header i{
-
-            font-size:55px;
-
-            z-index:2;
+        .auth-brand::before {
+            content: "";
+            position: absolute;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle at 30% 40%, rgba(255,255,255,0.05) 8%, transparent 8%),
+                        radial-gradient(circle at 70% 60%, rgba(255,255,255,0.05) 12%, transparent 12%),
+                        radial-gradient(circle at 50% 80%, rgba(255,255,255,0.05) 6%, transparent 6%);
+            opacity: 0.6;
         }
-
-        .header h2{
-
-            margin-top:15px;
-
-            z-index:2;
+        .auth-brand i {
+            font-size: 4.5rem;
+            color: var(--warning);
+            filter: drop-shadow(0 0 10px rgba(255, 193, 7, 0.6));
+            z-index: 2;
+            margin-bottom: 1rem;
         }
-
-        .content{
-
-            padding:35px;
+        .auth-brand h2 {
+            font-weight: 700;
+            z-index: 2;
+            font-size: 1.8rem;
+            letter-spacing: 0.5px;
         }
-
-        .form-control,
-        .form-select{
-
-            border:none;
-
-            background:#f5f5f5;
-
-            padding:14px;
-
-            border-radius:14px;
+        .auth-brand p {
+            z-index: 2;
+            opacity: 0.8;
+            font-size: 0.95rem;
+            margin-top: 0.5rem;
         }
-
-        .form-control:focus,
-        .form-select:focus{
-
-            box-shadow:none;
-
-            border:1px solid #111;
+        /* Painel direito (formulários) */
+        .auth-form {
+            width: 55%;
+            padding: 3rem 2.5rem;
+            background: var(--card-bg);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
         }
-
-        .btn-auth{
-
-            width:100%;
-
-            padding:14px;
-
-            border:none;
-
-            border-radius:14px;
-
-            background:#111;
-
-            color:white;
-
-            font-weight:600;
-
-            transition:.3s;
+        .auth-form h3 {
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            color: var(--dark);
         }
-
-        .btn-auth:hover{
-
-            transform:translateY(-2px);
+        .form-control, .form-select {
+            border: 1px solid #dee2e6;
+            background: #f8f9fa;
+            padding: 0.75rem 1rem;
+            border-radius: 3rem;
+            transition: all var(--transition);
         }
-
-        .link-auth{
-
-            text-align:center;
-
-            margin-top:20px;
+        .form-control:focus, .form-select:focus {
+            border-color: var(--accent);
+            box-shadow: 0 0 0 0.2rem rgba(13, 110, 253, 0.15);
+            background: #fff;
         }
-
-        .link-auth a{
-
-            text-decoration:none;
-
-            font-weight:bold;
-
-            cursor:pointer;
+        .btn-auth {
+            width: 100%;
+            padding: 0.75rem;
+            border: none;
+            border-radius: 3rem;
+            background: var(--accent);
+            color: white;
+            font-weight: 600;
+            font-size: 1rem;
+            transition: all var(--transition);
+            position: relative;
+            overflow: hidden;
         }
-
-        .alert{
-            display:none;
+        .btn-auth:hover {
+            background: #0b5ed7;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(13, 110, 253, 0.3);
         }
-
+        .btn-auth:active {
+            transform: translateY(0);
+        }
+        .link-auth {
+            text-align: center;
+            margin-top: 1.5rem;
+        }
+        .link-auth a {
+            color: var(--accent);
+            text-decoration: none;
+            font-weight: 600;
+            cursor: pointer;
+            transition: color var(--transition);
+        }
+        .link-auth a:hover {
+            color: #0a58ca;
+            text-decoration: underline;
+        }
+        /* Toast */
+        .toast-container {
+            z-index: 9999;
+        }
+        .toast {
+            border-radius: 1rem;
+            box-shadow: 0 0.5rem 1rem rgba(0,0,0,0.15);
+        }
+        /* Spinner de carregamento no botão */
+        .spinner-btn {
+            width: 1.2rem;
+            height: 1.2rem;
+            border-width: 0.15rem;
+            margin-right: 0.5rem;
+        }
+        /* Responsivo */
+        @media (max-width: 768px) {
+            .auth-card {
+                flex-direction: column;
+                max-width: 450px;
+            }
+            .auth-brand, .auth-form {
+                width: 100%;
+            }
+            .auth-brand {
+                padding: 2rem;
+            }
+            .auth-brand i {
+                font-size: 3rem;
+            }
+            .auth-form {
+                padding: 2rem 1.5rem;
+            }
+        }
     </style>
-
 </head>
-
 <body>
-
-<div class="card-auth">
-
-    <div class="header">
-
-        <i class="bi bi-list-check"></i>
-
-        <h2>Agenda</h2>
-
-    </div>
-
-    <div class="content">
-
-        <div id="mensagem"
-             class="alert alert-success">
+<!-- Toast container -->
+<div class="toast-container position-fixed bottom-0 end-0 p-3">
+    <div id="liveToast" class="toast align-items-center text-bg-success border-0" role="alert" aria-live="assertive" aria-atomic="true">
+        <div class="d-flex">
+            <div class="toast-body" id="toastMessage"></div>
+            <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Fechar"></button>
         </div>
-
-        <!-- LOGIN -->
-
-        <form id="formLogin"
-              method="post"
-              th:action="@{/login}">
-
-            <h3 class="text-center mb-4">
-
-                Login
-
-            </h3>
-
-            <div class="mb-3">
-
-                <label>Nome</label>
-
-                <input
-                        type="text"
-                        name="username"
-                        class="form-control"
-                        placeholder="Digite seu login"
-                        required>
-
-            </div>
-
-            <div class="mb-4">
-
-                <label>Senha</label>
-
-                <input
-                        type="password"
-                        name="password"
-                        class="form-control"
-                        placeholder="Digite sua senha"
-                        required>
-
-            </div>
-
-            <button
-                    type="submit"
-                    class="btn-auth">
-
-                Entrar
-
-            </button>
-
-            <div class="link-auth">
-
-                Não possui conta?
-
-                <a onclick="mostrarCadastro()">
-
-                    Cadastre-se
-
-                </a>
-
-            </div>
-
-        </form>
-
-        <!-- CADASTRO -->
-
-        <form id="formCadastro"
-              style="display:none;">
-
-            <h3 class="text-center mb-4">
-
-                Criar Conta
-
-            </h3>
-
-            <div class="mb-3">
-
-                <label>Nome</label>
-
-                <input
-                        type="text"
-                        id="cadastroLogin"
-                        class="form-control"
-                        placeholder="Escolha um login"
-                        required>
-
-            </div>
-
-            <div class="mb-3">
-
-                <label>Senha</label>
-
-                <input
-                        type="password"
-                        id="cadastroSenha"
-                        class="form-control"
-                        placeholder="Crie uma senha"
-                        required>
-
-            </div>
-
-            <div class="mb-4">
-
-                <label>Perfil</label>
-
-                <select
-                        id="role"
-                        class="form-select">
-
-                    <option value="USUARIO">
-
-                        Usuário
-
-                    </option>
-
-                    <option value="ADMIN">
-
-                        Admin
-
-                    </option>
-
-                </select>
-
-            </div>
-
-            <button
-                    type="submit"
-                    class="btn-auth">
-
-                Criar Conta
-
-            </button>
-
-            <div class="link-auth">
-
-                Já possui conta?
-
-                <a onclick="mostrarLogin()">
-
-                    Fazer Login
-
-                </a>
-
-            </div>
-
-        </form>
-
     </div>
-
 </div>
 
+<div class="auth-card">
+    <!-- Lado da marca -->
+    <div class="auth-brand">
+        <i class="fas fa-tasks"></i>
+        <h2>Task Dashboard</h2>
+        <p>Organize suas tarefas com eficiência e estilo.</p>
+    </div>
+
+    <!-- Lado dos formulários -->
+    <div class="auth-form">
+        <!-- LOGIN -->
+        <form id="formLogin" method="post" th:action="@{/login}">
+            <h3>Entrar</h3>
+            <div class="mb-3">
+                <label for="loginUsername" class="form-label fw-semibold">Usuário</label>
+                <input type="text" id="loginUsername" name="username" class="form-control" placeholder="Digite seu usuário" required>
+            </div>
+            <div class="mb-4">
+                <label for="loginPassword" class="form-label fw-semibold">Senha</label>
+                <input type="password" id="loginPassword" name="password" class="form-control" placeholder="Digite sua senha" required>
+            </div>
+            <button type="submit" class="btn-auth">
+                <i class="fas fa-sign-in-alt me-2"></i> Entrar
+            </button>
+            <div class="link-auth">
+                Não possui conta?
+                <a onclick="mostrarCadastro()">Cadastre-se</a>
+            </div>
+        </form>
+
+        <!-- CADASTRO (oculto inicialmente) -->
+        <form id="formCadastro" style="display: none;">
+            <h3>Criar Conta</h3>
+            <div class="mb-3">
+                <label for="cadastroLogin" class="form-label fw-semibold">Usuário</label>
+                <input type="text" id="cadastroLogin" class="form-control" placeholder="Escolha um nome de usuário" required>
+            </div>
+            <div class="mb-3">
+                <label for="cadastroSenha" class="form-label fw-semibold">Senha</label>
+                <input type="password" id="cadastroSenha" class="form-control" placeholder="Crie uma senha" required>
+            </div>
+            <div class="mb-4">
+                <label for="role" class="form-label fw-semibold">Perfil</label>
+                <select id="role" class="form-select">
+                    <option value="USUARIO">Usuário</option>
+                    <option value="ADMIN">Administrador</option>
+                </select>
+            </div>
+            <button type="submit" class="btn-auth" id="btnCadastro">
+                <i class="fas fa-user-plus me-2"></i> Criar Conta
+            </button>
+            <div class="link-auth">
+                Já possui conta?
+                <a onclick="mostrarLogin()">Fazer Login</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Scripts -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 <script>
-
-    function mostrarCadastro(){
-
-        document
-            .getElementById("formLogin")
-            .style.display = "none";
-
-        document
-            .getElementById("formCadastro")
-            .style.display = "block";
+    // Toast setup
+    const toastEl = document.getElementById('liveToast');
+    const toast = new bootstrap.Toast(toastEl);
+    function showToast(message, type = 'success') {
+        document.getElementById('toastMessage').textContent = message;
+        toastEl.className = `toast align-items-center text-bg-${type} border-0`;
+        toast.show();
     }
 
-    function mostrarLogin(){
-
-        document
-            .getElementById("formCadastro")
-            .style.display = "none";
-
-        document
-            .getElementById("formLogin")
-            .style.display = "block";
+    // Alternância entre formulários
+    function mostrarCadastro() {
+        document.getElementById('formLogin').style.display = 'none';
+        document.getElementById('formCadastro').style.display = 'block';
+    }
+    function mostrarLogin() {
+        document.getElementById('formCadastro').style.display = 'none';
+        document.getElementById('formLogin').style.display = 'block';
     }
 
-    document
-        .getElementById("formCadastro")
-        .addEventListener("submit", async function(event){
+    // Verifica se houve erro de login (query param ?error)
+    const urlParams = new URLSearchParams(window.location.search);
+    if (urlParams.has('error')) {
+        showToast('Usuário ou senha inválidos.', 'danger');
+        // Limpa o parâmetro da URL sem recarregar a página
+        window.history.replaceState({}, document.title, window.location.pathname);
+    }
 
-            event.preventDefault();
+    // Cadastro com validações e mensagens específicas
+    document.getElementById('formCadastro').addEventListener('submit', async function(event) {
+        event.preventDefault();
 
-            const usuario = {
+        const login = document.getElementById('cadastroLogin').value.trim();
+        const senha = document.getElementById('cadastroSenha').value.trim();
+        const role = document.getElementById('role').value;
+        const btn = document.getElementById('btnCadastro');
 
-                login:
-                    document
-                        .getElementById("cadastroLogin")
-                        .value,
+        if (!login || !senha) {
+            showToast('Preencha todos os campos.', 'warning');
+            return;
+        }
+        if (senha.length < 4) {
+            showToast('A senha deve ter pelo menos 4 caracteres.', 'warning');
+            return;
+        }
 
-                senha:
-                    document
-                        .getElementById("cadastroSenha")
-                        .value,
+        // Mostrar carregamento no botão
+        const originalHTML = btn.innerHTML;
+        btn.innerHTML = '<span class="spinner-border spinner-border-sm spinner-btn" role="status"></span> Criando...';
+        btn.disabled = true;
 
-                roles:[
-                    document
-                        .getElementById("role")
-                        .value
-                ]
-            };
+        const usuario = {
+            login: login,
+            senha: senha,
+            roles: [role]
+        };
 
-            try{
+        try {
+            const response = await fetch('/usuarios', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(usuario)
+            });
 
-                const response =
-                    await fetch("/usuarios",{
-
-                        method:"POST",
-
-                        headers:{
-                            "Content-Type":"application/json"
-                        },
-
-                        body:JSON.stringify(usuario)
-                    });
-
-                const mensagem =
-                    document.getElementById("mensagem");
-
-                if(response.ok){
-
-                    mensagem.className =
-                        "alert alert-success";
-
-                    mensagem.style.display =
-                        "block";
-
-                    mensagem.innerText =
-                        "Usuário criado com sucesso!";
-
-                    document
-                        .getElementById("formCadastro")
-                        .reset();
-
-                    setTimeout(() => {
-
-                        mostrarLogin();
-
-                    },1500);
-
-                }else{
-
-                    mensagem.className =
-                        "alert alert-danger";
-
-                    mensagem.style.display =
-                        "block";
-
-                    mensagem.innerText =
-                        "Erro ao cadastrar usuário.";
+            if (response.ok) {
+                showToast('Conta criada com sucesso!', 'success');
+                document.getElementById('formCadastro').reset();
+                setTimeout(() => {
+                    mostrarLogin();
+                }, 1200);
+            } else {
+                // Tratamento específico por status HTTP
+                let mensagem = 'Erro ao cadastrar. Tente novamente.';
+                if (response.status === 404) {
+                    mensagem = 'Usuário não encontrado.';
+                } else if (response.status === 409) {
+                    mensagem = 'Usuário já existe.';
+                } else {
+                    try {
+                        const errorText = await response.text();
+                        if (errorText) mensagem = errorText;
+                    } catch (e) {}
                 }
-
-            }catch(error){
-
-                document
-                    .getElementById("mensagem")
-                    .className =
-                    "alert alert-danger";
-
-                document
-                    .getElementById("mensagem")
-                    .style.display =
-                    "block";
-
-                document
-                    .getElementById("mensagem")
-                    .innerText =
-                    "Erro ao conectar com o servidor.";
+                showToast(mensagem, 'danger');
             }
-        });
-
+        } catch (error) {
+            showToast('Erro de conexão com o servidor.', 'danger');
+        } finally {
+            btn.innerHTML = originalHTML;
+            btn.disabled = false;
+        }
+    });
 </script>
-
 </body>
 </html>
