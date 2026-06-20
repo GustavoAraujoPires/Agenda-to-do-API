@@ -1,0 +1,10 @@
+
+# Create network
+docker network create agenda-networks
+
+#Agora para apontar o container para a network
+
+docker run --name agenda -e PGADMIN_DEFAULT_EMAIL=agenda@gmail.com -e PGADMIN_DEFAULT_PASSWORD=agenda -p 15432:80 --network agenda-networks dpage/pgadmin4:8.9
+
+docker run --name agenda -e POSTGRES_PASSWORD=postgres -e POSTGRES_USER=postgres -e POSTGRES_DB=agendaDB -p 5432:5432 --network agenda-networks postgres:16.3
+
