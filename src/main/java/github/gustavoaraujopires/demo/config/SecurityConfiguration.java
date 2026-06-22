@@ -23,10 +23,9 @@ public class SecurityConfiguration {
         return http
                 .csrf(AbstractHttpConfigurer::disable)
                 .httpBasic(Customizer.withDefaults())
-
-                //.formLogin(configurer -> {
-                  //  configurer.loginPage("/login").defaultSuccessUrl("/home", true);
-                //})
+                .formLogin(configurer -> {
+                    configurer.loginPage("/login").defaultSuccessUrl("/home", true);
+                })
                 .formLogin(Customizer.withDefaults())
                 .authorizeHttpRequests(authorize -> {
                     authorize.requestMatchers("/login/**").permitAll();
