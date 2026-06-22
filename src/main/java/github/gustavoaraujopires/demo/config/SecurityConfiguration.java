@@ -1,7 +1,7 @@
 package github.gustavoaraujopires.demo.config;
 
-import github.gustavoaraujopires.demo.security.CustomUserDetailsService;
-import github.gustavoaraujopires.demo.service.UsuarioService;
+
+import github.gustavoaraujopires.demo.security.LoginSocialSuccessHandler;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -9,7 +9,7 @@ import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
-import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.config.core.GrantedAuthorityDefaults;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
@@ -19,7 +19,7 @@ import org.springframework.security.web.SecurityFilterChain;
 public class SecurityConfiguration {
 
     @Bean
-    public SecurityFilterChain securityFilterChain (HttpSecurity http) throws Exception {
+    public SecurityFilterChain securityFilterChain (HttpSecurity http, LoginSocialSuccessHandler successHandler) throws Exception {
         return http
                 .csrf(AbstractHttpConfigurer::disable)
                 .httpBasic(Customizer.withDefaults())
@@ -32,7 +32,11 @@ public class SecurityConfiguration {
                     authorize.requestMatchers("/home/**").permitAll();
                     authorize.requestMatchers(HttpMethod.POST, "/usuarios/**").permitAll();
                     authorize.anyRequest().authenticated();
-                }).oauth2Login(Customizer.withDefaults())
+                }).oauth2Login(oauth2 -> {
+                    oauth2
+                            .loginPage("/login").defaultSuccessUrl("/home", true)
+                            .successHandler(successHandler);
+                })
                 .build();
     }
 
@@ -42,9 +46,8 @@ public class SecurityConfiguration {
     }
 
     @Bean
-    public UserDetailsService userDetailsService (UsuarioService usuarioService){
-        return new CustomUserDetailsService(usuarioService);
+    public GrantedAuthorityDefaults grantedAuthorityDefaults(){
+        return new GrantedAuthorityDefaults("");
     }
-
 }
 
